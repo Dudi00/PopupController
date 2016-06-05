@@ -21,12 +21,12 @@ typealias PopupAnimateCompletion =  () -> ()
 
 // MARK: - Protocols
 /** PopupContentViewController:
-    Every ViewController which is added on the PopupController must need to be conformed this protocol.
+ Every ViewController which is added on the PopupController must need to be conformed this protocol.
  */
 public protocol PopupContentViewController {
     
     /** sizeForPopup(popupController: size: showingKeyboard:):
-        return view's size
+     return view's size
      */
     func sizeForPopup(popupController: PopupController, size: CGSize, showingKeyboard: Bool) -> CGSize
 }
@@ -235,6 +235,9 @@ private extension PopupController {
         baseScrollView.frame = view.frame
         baseScrollView.contentInset.top = layout.origin(popupView).y
         defaultContentOffset.y = -baseScrollView.contentInset.top
+        
+        baseScrollView.contentSize = popupView.frame.size
+        print("contentSize \(baseScrollView.contentSize)")
     }
     
     func updateBackgroundStyle(style: PopupBackgroundStyle) {
@@ -386,8 +389,8 @@ private extension PopupController {
             self.popupView.alpha = 1.0
             self.baseScrollView.alpha = 1.0
             self.popupView.transform = CGAffineTransformMakeScale(1.0, 1.0)
-            }) { (finished) -> Void in
-                completion()
+        }) { (finished) -> Void in
+            completion()
         }
     }
     
@@ -415,8 +418,8 @@ private extension PopupController {
                 self.popupView.alpha = 0.0
                 self.baseScrollView.alpha = 0.0
                 self.popupView.transform = CGAffineTransformMakeScale(0.9, 0.9)
-            }) { (finished) -> Void in
-                completion()
+        }) { (finished) -> Void in
+            completion()
         }
     }
     
@@ -444,11 +447,14 @@ extension PopupController: UIScrollViewDelegate {
     
     public func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         let delta: CGFloat = defaultContentOffset.y - scrollView.contentOffset.y
-        if delta > 50 {
-            baseScrollView.contentInset.top = -scrollView.contentOffset.y
-            animation = .SlideUp
-            self.closePopup { _ in }
-        }
+        //Here I should check if top of view is under half of screen
+        //        if delta > 50 {
+        //
+        //
+        //            baseScrollView.contentInset.top = -scrollView.contentOffset.y
+        //            animation = .SlideUp
+        //            self.closePopup { _ in }
+        //        }
     }
     
 }
